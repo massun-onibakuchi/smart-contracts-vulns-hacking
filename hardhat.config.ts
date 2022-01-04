@@ -31,9 +31,6 @@ const config: HardhatUserConfig = {
                 }
                 : undefined,
         },
-        polygon: {
-            url: "https://eth-rinkeby.alchemyapi.io/v2/123abc123abc123abc123abc123abcde",
-        },
     },
     solidity: {
         compilers: [
