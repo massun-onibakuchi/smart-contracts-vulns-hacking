@@ -1,5 +1,5 @@
-## Lack of chainID validation allows signatures to be re-used across forks:YDai 
-    
+## Lack of chainID validation allows signatures to be re-used across forks:fyDai 
+
 ## ToB’s Audit of Yield Protocol
 > implements the draft ERC 2612 via the ERC20Permit contract it inherits from. This allows a third party to transmit a signature from a token holder that modifies the ERC20 allowance for a particular user. These signatures used in calls to permit in ERC20Permit do not account for chain splits. The chainID is included in the domain separator. However, it is not updatable and not included in the signed data as part of the permit call. As a result, if the chain forks after deployment, the signed message may be considered valid on both forks. 
 
@@ -15,12 +15,15 @@ Ref: ToB's Audit
 
 ### Note
 
-`DOMAIN_SEPARATOR`にchainIdが含まれているが、`permit`の署名されるデータには`chainId`は含まれていない。そのため、[EIP-2612#Security Considerations](https://eips.ethereum.org/EIPS/eip-2612#security-considerations)で指摘されているように、`DOMAIN_SEPARATOR`が`permit`の呼び出し毎にコントラクトで作られずに、コントラクトのデプロイ時で固定されてしまうと、チェーンスプリットの時にリプレイ攻撃される危険性がある。リプレイ攻撃を防ぐために、`DOMAIN_SEPARATOR`の`chainId`がchainのフォークに対応して同一の値にならないようにするか、`permit`のパラメータに`chainId`を含める。
+`DOMAIN_SEPARATOR`にchainIdが含まれているが、`permit`の署名されるデータには`chainId`は含まれていない。そのため、[EIP-2612#Security Considerations](https://eips.ethereum.org/EIPS/eip-2612#security-considerations)で指摘されているように、`DOMAIN_SEPARATOR`が`permit`の呼び出し毎にコントラクトで作られずに、コントラクトのデプロイ時で固定されてしまうと、チェーンスプリットの時に両方のチェーンでその署名は有効になり、リプレイ攻撃される危険性がある。リプレイ攻撃を防ぐために、`DOMAIN_SEPARATOR`の`chainId`がchainのフォークに対応して同一の値にならないようにするか、`permit`のパラメータに`chainId`を含める。
 
 YFI
 そもそもchainIdが含まれている理由は、ネットワーク間での署名のリプレイ攻撃の防止であるが、今回のケースのようにコントラクトのデプロイ時に固定されてしまうとデプロイ後のフォークでのリプレイ攻撃を防ぐことはできない。パラメータの存在意義を考えれば当然であるだろう。
 
 [Opezeppelin draft-ERC20Permit.sol](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/a9f994f063b3c119f6fafd74ea7e51a5b5f98545/contracts/token/ERC20/extensions/draft-ERC20Permit.sol#L54)は、署名ごとに`block.chainId`でchainIdを取得し、`domainSeparator`を計算する。
+
+### Lesson
+`chainid`は決して定数ではないので、定数としてみなさない。コントラクトのデプロイ後にチェーンのフォークで変わる可能性がある。
 
 ### Similar cases
 
