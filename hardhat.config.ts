@@ -23,7 +23,6 @@ const config: HardhatUserConfig = {
             url: "http://127.0.0.1:8545",
         },
         hardhat: {
-            chainId: 1,
             forking: ENABLE_MAINNET_FORKING
                 ? {
                     url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
@@ -35,21 +34,17 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             {
-                version: "0.7.6",
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
-                },
-            },
-            {
                 version: "0.8.4",
                 settings: {
                     optimizer: {
                         enabled: true,
                         runs: 200,
                     },
+                    outputSelection: {
+                        '*': {
+                            '*': ['storageLayout']
+                        }
+                    }
                 },
             },
         ],
