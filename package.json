@@ -34,8 +34,9 @@
         "typechain": "hardhat typechain",
         "chain": "hardhat node --no-deploy",
         "deploy": "hardhat deploy",
-        "lint": "yarn solhint 'contracts/**/*.sol' && yarn prettier -c 'test/**/*.ts'",
-        "format:sol": "yarn prettier --write 'contracts/**/*.sol'",
-        "format": "yarn format:sol && yarn prettier --write 'test/**/*.ts'"
+        "lint": "prettier --list-different 'contracts/**/*.sol' && prettier -c 'test/**/*.ts'",
+        "prettier:sol": "prettier --write 'contracts/**/*.sol'",
+        "prettier:ts": "prettier --write 'test/**/*.ts'",
+        "prettier": "yarn prettier:sol && yarn prettier:ts"
     }
 }
