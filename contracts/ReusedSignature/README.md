@@ -28,3 +28,8 @@ YFI
 ### Similar cases
 
 [Golem - gnt2](https://github.com/golemfactory/gnt2/issues/138)
+
+### References
+[Rari Capital - Solcurity](https://github.com/Rari-Capital/solcurity#code)
+
+> `C10` - Are signatures protected against replay with a nonce and `block.chainid` (SWC-121)
