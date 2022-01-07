@@ -4,14 +4,15 @@ import "@typechain/hardhat"
 import "@nomiclabs/hardhat-waffle"
 import "@nomiclabs/hardhat-ethers"
 // import "hardhat-etherscan-abi"
+import "@tenderly/hardhat-tenderly"
 
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 const BLOCK_NUMBER = process.env.BLOCK_NUMBER
 const MNEMONIC = process.env.MNEMONIC
-const ENABLE_MAINNET_FORKING = process.env.ENABLE_MAINNET_FORKING
+const FORK = process.env.FORK
 
-if (ENABLE_MAINNET_FORKING && !ALCHEMY_API_KEY) throw new Error("ALCHEMY_API_KEY_NOT_FOUND")
+if (FORK && !ALCHEMY_API_KEY) throw new Error("ALCHEMY_API_KEY_NOT_FOUND")
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -19,16 +20,20 @@ if (ENABLE_MAINNET_FORKING && !ALCHEMY_API_KEY) throw new Error("ALCHEMY_API_KEY
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
     networks: {
-        localhost: {
+        local: {
             url: "http://127.0.0.1:8545",
         },
         hardhat: {
-            forking: ENABLE_MAINNET_FORKING
-                ? {
-                    url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-                    //blockNumber: <set>
-                }
-                : undefined,
+            forking:
+            {
+                enabled: FORK === "true",
+                url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+                blockNumber: BLOCK_NUMBER ? Number(BLOCK_NUMBER) : undefined
+            }
+        },
+        mainnet: {
+            url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+            chainId: 1,
         },
     },
     solidity: {
@@ -40,15 +45,19 @@ const config: HardhatUserConfig = {
                         enabled: true,
                         runs: 200,
                     },
-                    outputSelection: {
-                        '*': {
-                            '*': ['storageLayout']
-                        }
-                    }
+                    // outputSelection: {
+                    //     '*': {
+                    //         '*': ['storageLayout']
+                    //     }
+                    // }
                 },
             },
         ],
     },
+    // tenderly: {
+    //     username: "usrname",
+    //     project: "project"
+    // },
     paths: {
         sources: "./contracts",
         tests: "./test",

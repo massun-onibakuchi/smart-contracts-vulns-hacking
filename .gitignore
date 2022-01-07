@@ -2,6 +2,7 @@
 
 # env variables
 .env
+tenderly.yaml
 
 # logg
 *.log
