@@ -3,6 +3,7 @@ pragma solidity ^0.8.4;
 
 import "./Batchable.sol";
 
+/// @title reference: SushiSwap Miso contract
 contract DutchAuction is Batchable {
     /**
      * @notice Checks the amount of ETH to commit and adds the commitment. Refunds the buyer if commit is too high.

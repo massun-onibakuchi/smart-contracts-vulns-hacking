@@ -11,19 +11,19 @@ async function overwriteStorage(address: string, slot: string, value: BigNumber)
 }
 
 async function getImpersonatedSigner(address: string): Promise<SignerWithAddress> {
-  await hre.network.provider.request({
+  await network.provider.request({
     method: 'hardhat_impersonateAccount',
-    params: [address]
-  });
+    params: [address],
+  })
 
-  const signer = await ethers.getSigner(address);
+  const signer = await ethers.getSigner(address)
 
-  return signer;
+  return signer
 }
 
 async function resetFork(blockNumber?) {
   await network.provider.request({
-    method: "hardhat_reset",
+    method: 'hardhat_reset',
     params: [
       {
         forking: {
@@ -32,7 +32,7 @@ async function resetFork(blockNumber?) {
         },
       },
     ],
-  });
+  })
 }
 
 async function snapshot() {
@@ -43,10 +43,4 @@ async function restore(snapshotId) {
   return network.provider.send('evm_revert', [snapshotId])
 }
 
-export {
-  overwriteStorage,
-  getImpersonatedSigner,
-  resetFork,
-  snapshot,
-  restore
-}
+export { overwriteStorage, getImpersonatedSigner, resetFork, snapshot, restore }

@@ -37,7 +37,7 @@ describe('Lack of chainID validation allows signatures to be re-used across fork
       vulnToken.address,
       this.approve,
       this.nonce,
-      this.deadline,
+      this.deadline
     )
   })
 
@@ -46,7 +46,7 @@ describe('Lack of chainID validation allows signatures to be re-used across fork
       const { v, r, s } = this.signature
       // Approve it
       await expect(
-        vulnToken.permit(this.approve.owner, this.approve.spender, this.approve.value, this.deadline, v, r, s),
+        vulnToken.permit(this.approve.owner, this.approve.spender, this.approve.value, this.deadline, v, r, s)
       ).to.emit(vulnToken, 'Approval')
       expect(await vulnToken.allowance(this.approve.owner, this.approve.spender)).to.be.equal(this.approve.value)
     })
@@ -60,7 +60,7 @@ describe('Lack of chainID validation allows signatures to be re-used across fork
 
       // Approve it
       await expect(
-        vulnToken.permit(this.approve.owner, this.approve.spender, this.approve.value, this.deadline, v, r, s),
+        vulnToken.permit(this.approve.owner, this.approve.spender, this.approve.value, this.deadline, v, r, s)
       ).to.emit(vulnToken, 'Approval')
       expect(await vulnToken.allowance(this.approve.owner, this.approve.spender)).to.be.equal(this.approve.value)
     })
@@ -78,7 +78,7 @@ const signPermitApproval = async (
     value: number
   },
   nonce: number,
-  deadline: number,
+  deadline: number
 ) => {
   const domain = {
     name,

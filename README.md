@@ -1,4 +1,4 @@
-## Smart Contracts Vulns Hacking
+# Smart Contracts Vulns Hacking
 
 ## Getting Started
 
