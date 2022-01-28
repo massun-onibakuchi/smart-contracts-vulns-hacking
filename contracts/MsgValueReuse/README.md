@@ -8,6 +8,9 @@ using `msg.value` in complex systems is hard. It’s a global variable that you 
 #### SushiSwap Miso exploit      
 `FORK=true yarn test test/Miso.test.ts`
 
+More realistic PoC  
+[tinchoabbate's SushiSwap MISO exploit PoC](https://github.com/tinchoabbate/sushiswap-miso-exploit-poc)
+
 ### Lesson
 
 [Rari Capital - Solcurity](https://github.com/Rari-Capital/solcurity#code)

@@ -10,6 +10,10 @@ async function overwriteStorage(address: string, slot: string, value: BigNumber)
   await network.provider.send('hardhat_setStorageAt', [address, slot, hexValue])
 }
 
+async function getStorageAt(address: string, slot: string) {
+  return await network.provider.send('eth_getStorageAt', [address, slot])
+}
+
 async function getImpersonatedSigner(address: string): Promise<SignerWithAddress> {
   await network.provider.request({
     method: 'hardhat_impersonateAccount',
@@ -43,4 +47,16 @@ async function restore(snapshotId) {
   return network.provider.send('evm_revert', [snapshotId])
 }
 
-export { overwriteStorage, getImpersonatedSigner, resetFork, snapshot, restore }
+async function latestTime(): Promise<number> {
+  const { timestamp } = await ethers.provider.getBlock(await ethers.provider.getBlockNumber());
+
+  return timestamp as number;
+}
+
+async function mine(): Promise<void> {
+  await hre.network.provider.request({
+    method: 'evm_mine'
+  });
+}
+
+export { overwriteStorage, getStorageAt, getImpersonatedSigner, resetFork, snapshot, restore, latestTime, mine }

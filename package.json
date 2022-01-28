@@ -36,8 +36,8 @@
         "chain": "hardhat node",
         "deploy": "hardhat deploy",
         "lint": "prettier --list-different 'contracts/**/*.sol' && prettier -c 'test/**/*.ts'",
-        "prettier:sol": "prettier --write 'contracts/**/*.sol'",
-        "prettier:ts": "prettier --write 'test/**/*.ts'",
-        "prettier": "yarn prettier:sol && yarn prettier:ts"
+        "format:sol": "prettier --write 'contracts/**/*.sol'",
+        "format:ts": "prettier --write 'test/**/*.ts'",
+        "format": "yarn prettier:sol && yarn prettier:ts"
     }
 }

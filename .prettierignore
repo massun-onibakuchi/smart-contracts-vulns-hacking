@@ -2,3 +2,4 @@ typechain/
 cache/
 artifacts/
 **/*.md
+typechain-types/
