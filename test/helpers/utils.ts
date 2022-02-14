@@ -1,6 +1,8 @@
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
-import { BigNumber } from 'ethers'
+import { expect } from 'chai'
+import { BigNumber, BigNumberish, Signer } from 'ethers'
 import hre, { ethers, network } from 'hardhat'
+
+const toWei = ethers.utils.parseEther
 
 async function overwriteStorage(address: string, slot: string, value: BigNumber) {
   const hexValue = '0x' + value.toHexString().slice(2).padStart(64, '0')
@@ -14,7 +16,7 @@ async function getStorageAt(address: string, slot: string) {
   return await network.provider.send('eth_getStorageAt', [address, slot])
 }
 
-async function getImpersonatedSigner(address: string): Promise<SignerWithAddress> {
+async function getImpersonatedSigner(address: string): Promise<Signer> {
   await network.provider.request({
     method: 'hardhat_impersonateAccount',
     params: [address],
@@ -25,13 +27,13 @@ async function getImpersonatedSigner(address: string): Promise<SignerWithAddress
   return signer
 }
 
-async function resetFork(blockNumber?) {
+async function resetFork(blockNumber?, jsonRpcUrl?) {
   await network.provider.request({
     method: 'hardhat_reset',
     params: [
       {
         forking: {
-          jsonRpcUrl: hre.config.networks.hardhat.forking.url,
+          jsonRpcUrl: jsonRpcUrl || hre.config.networks.hardhat.forking.url,
           blockNumber,
         },
       },
@@ -48,15 +50,39 @@ async function restore(snapshotId) {
 }
 
 async function latestTime(): Promise<number> {
-  const { timestamp } = await ethers.provider.getBlock(await ethers.provider.getBlockNumber());
+  const { timestamp } = await ethers.provider.getBlock(await ethers.provider.getBlockNumber())
 
-  return timestamp as number;
+  return timestamp as number
 }
 
 async function mine(): Promise<void> {
   await hre.network.provider.request({
-    method: 'evm_mine'
-  });
+    method: 'evm_mine',
+  })
 }
 
-export { overwriteStorage, getStorageAt, getImpersonatedSigner, resetFork, snapshot, restore, latestTime, mine }
+// expectApproxAbs(a, b, c) checks if b is between [a-c, a+c]
+function expectApproxAbs(actual: BigNumberish, expected: BigNumberish, diff = '1000') {
+  const actualBN = BigNumber.from(actual)
+  const expectedBN = BigNumber.from(expected)
+  const diffBN = BigNumber.from(diff)
+
+  const lowerBound = expectedBN.sub(diffBN)
+  const upperBound = expectedBN.add(diffBN)
+
+  expect(actualBN).to.be.gte(lowerBound)
+  expect(actualBN).to.be.lte(upperBound)
+}
+
+export {
+  toWei,
+  overwriteStorage,
+  getStorageAt,
+  getImpersonatedSigner,
+  resetFork,
+  snapshot,
+  restore,
+  latestTime,
+  mine,
+  expectApproxAbs,
+}

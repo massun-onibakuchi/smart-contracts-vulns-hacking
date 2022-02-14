@@ -38,6 +38,6 @@
         "lint": "prettier --list-different 'contracts/**/*.sol' && prettier -c 'test/**/*.ts'",
         "format:sol": "prettier --write 'contracts/**/*.sol'",
         "format:ts": "prettier --write 'test/**/*.ts'",
-        "format": "yarn prettier:sol && yarn prettier:ts"
+        "format": "yarn format:sol && yarn format:ts"
     }
 }
