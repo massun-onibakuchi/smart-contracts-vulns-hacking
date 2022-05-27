@@ -1,14 +1,12 @@
-import { DeployFunction } from "hardhat-deploy/dist/types"
-import { HardhatRuntimeEnvironment } from "hardhat/types"
+import { ethers } from "hardhat";
 
-const mockTokenDeployment: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
-    const { deployments, getNamedAccounts } = hre
-    const { deploy, get } = deployments
-    const { owner } = await getNamedAccounts()
-
-    const options = { from: owner }
-    const weth = await deploy("WETH", options)
-    const token = await deploy("ERC20Mock", { ...options, args: ["Dai Stable Coin", "DAI"] })
+const main = async () => {
+    const [signer] = await ethers.getSigners()
+    const Mock = await ethers.getContractFactory('WETH', signer)
+    const contract = await Mock.deploy()
+    console.log('contract.address :>> ', contract.address);
 }
-export default mockTokenDeployment
-mockTokenDeployment.tags = ["MockToken"]
+main().catch(err => {
+    console.log(err)
+    process.exit(1)
+})

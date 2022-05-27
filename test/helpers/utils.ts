@@ -78,47 +78,28 @@ function expectApproxAbs(actual: BigNumberish, expected: BigNumberish, diff = '1
 /// credit to Euler finance : Brute Force Storage Layout Discovery in ERC20 Contracts With Hardhat
 /// https://blog.euler.finance/brute-force-storage-layout-discovery-in-erc20-contracts-with-hardhat-7ff9342143ed
 async function findBalancesSlot(tokenAddress) {
-  const encode = (types, values) =>
-    ethers.utils.defaultAbiCoder.encode(types, values);
+  const encode = (types, values) => ethers.utils.defaultAbiCoder.encode(types, values)
 
-  const account = ethers.constants.AddressZero;
-  const probeA = encode(['uint'], [1]);
-  const probeB = encode(['uint'], [2]);
-  const token = await ethers.getContractAt(
-    'ERC20',
-    tokenAddress
-  );
+  const account = ethers.constants.AddressZero
+  const probeA = encode(['uint'], [1])
+  const probeB = encode(['uint'], [2])
+  const token = await ethers.getContractAt('ERC20', tokenAddress)
   for (let i = 0; i < 100; i++) {
-    let probedSlot = ethers.utils.keccak256(
-      encode(['address', 'uint'], [account, i])
-    );
+    let probedSlot = ethers.utils.keccak256(encode(['address', 'uint'], [account, i]))
     // remove padding for JSON RPC
-    while (probedSlot.startsWith('0x0'))
-      probedSlot = '0x' + probedSlot.slice(3);
-    const prev = await network.provider.send(
-      'eth_getStorageAt',
-      [tokenAddress, probedSlot, 'latest']
-    );
+    while (probedSlot.startsWith('0x0')) probedSlot = '0x' + probedSlot.slice(3)
+    const prev = await network.provider.send('eth_getStorageAt', [tokenAddress, probedSlot, 'latest'])
     // make sure the probe will change the slot value
-    const probe = prev === probeA ? probeB : probeA;
+    const probe = prev === probeA ? probeB : probeA
 
-    await network.provider.send("hardhat_setStorageAt", [
-      tokenAddress,
-      probedSlot,
-      probe
-    ]);
+    await network.provider.send('hardhat_setStorageAt', [tokenAddress, probedSlot, probe])
 
-    const balance = await token.balanceOf(account);
+    const balance = await token.balanceOf(account)
     // reset to previous value
-    await network.provider.send("hardhat_setStorageAt", [
-      tokenAddress,
-      probedSlot,
-      prev
-    ]);
-    if (balance.eq(ethers.BigNumber.from(probe)))
-      return i;
+    await network.provider.send('hardhat_setStorageAt', [tokenAddress, probedSlot, prev])
+    if (balance.eq(ethers.BigNumber.from(probe))) return i
   }
-  throw 'Balances slot not found!';
+  throw 'Balances slot not found!'
 }
 
 export {
@@ -132,5 +113,5 @@ export {
   latestTime,
   mine,
   expectApproxAbs,
-  findBalancesSlot
+  findBalancesSlot,
 }

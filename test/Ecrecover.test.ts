@@ -15,7 +15,7 @@ describe('Lack of Zero address check allows anyone to mint new MATIC tokens', as
   before(async function () {
     // Forking
     await resetFork(BLOCK_NUMBER, POLYGON_RPC_URL)
-      ;[attacker, recipient] = await ethers.getSigners()
+    ;[attacker, recipient] = await ethers.getSigners()
 
     await ethers.provider.send('hardhat_setBalance', [attacker.address, '0xffffffffffffffffffffff'])
     maticToken = (await ethers.getContractAt(Artifacts.abi, MATIC_ADDRESS)) as IMRC20Minimal
